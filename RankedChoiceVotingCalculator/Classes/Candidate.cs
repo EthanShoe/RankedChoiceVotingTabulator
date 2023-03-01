@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RankedChoiceVotingCalculator
+namespace RankedChoiceVotingCalculator.Classes
 {
     public class Candidate
     {
@@ -25,10 +25,10 @@ namespace RankedChoiceVotingCalculator
         {
             return new Candidate
             {
-                Name = this.Name,
-                FirstPlaceVotes = this.FirstPlaceVotes,
-                Position = this.Position,
-                IsOut = this.IsOut
+                Name = Name,
+                FirstPlaceVotes = FirstPlaceVotes,
+                Position = Position,
+                IsOut = IsOut
             };
         }
     }

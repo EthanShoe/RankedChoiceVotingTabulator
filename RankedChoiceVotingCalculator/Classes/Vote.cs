@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RankedChoiceVotingCalculator
+namespace RankedChoiceVotingCalculator.Classes
 {
     public class Vote
     {

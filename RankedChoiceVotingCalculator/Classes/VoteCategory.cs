@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RankedChoiceVotingCalculator
+namespace RankedChoiceVotingCalculator.Classes
 {
     public class VoteCategory
     {
