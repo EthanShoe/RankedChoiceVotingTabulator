@@ -1,4 +1,5 @@
 ﻿using OfficeOpenXml;
+using RankedChoiceVotingCalculator.Classes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
