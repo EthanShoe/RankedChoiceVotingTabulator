@@ -46,25 +46,26 @@ namespace RankedChoiceVotingCalculator.Classes
             {
                 VoteRound voteRound = new VoteRound(VoteRounds.Count + 1, Candidates, Votes, MinimumThreshold);
                 VoteRounds.Add(voteRound);
-                WinnerSearchResult searchResult = voteRound.SearchForWinner();
-                switch (searchResult)
+                switch (voteRound.SearchForWinner())
                 {
                     case WinnerSearchResult.Found:
                         return;
+
                     case WinnerSearchResult.NotFound:
-                        Candidates.Where(x => x.Name == voteRound.Candidates.Where(y => y.Status != CandidateStatus.Out).OrderByDescending(x => x.FirstPlaceVotes).Last().Name).First().Status = CandidateStatus.Out;
+                        Candidates.First(x => x.Name == voteRound.Candidates.Where(y => y.Status != CandidateStatus.Out).OrderByDescending(x => x.FirstPlaceVotes).Last().Name).Status = CandidateStatus.Out;
                         break;
+
                     case WinnerSearchResult.NonFinalTie:
                         //search first vote round to see if the candidates had different scores
                         var currentlyTiedCandidatesFromFirstRound = VoteRounds[0].Candidates.Where(x => voteRound.Candidates.Where(x => x.Status == CandidateStatus.NeedsTieBreaking).Any(y => y.Name == x.Name)).OrderByDescending(x => x.FirstPlaceVotes);
                         var candidatesTiedForLastPlace = currentlyTiedCandidatesFromFirstRound.Where(x => x.FirstPlaceVotes == currentlyTiedCandidatesFromFirstRound.Last().FirstPlaceVotes);
                         if (candidatesTiedForLastPlace.Count() == 1)
                         {
-                            Candidates.Where(x => x.Name == candidatesTiedForLastPlace.First().Name).First().Status = CandidateStatus.Out;
+                            Candidates.First(x => x.Name == candidatesTiedForLastPlace.First().Name).Status = CandidateStatus.Out;
                         }
                         else
                         {
-                            Console.WriteLine("There is a tie in a non-final round:");
+                            Console.WriteLine($"There is a tie in a non-final round for {Name}:");
                             for (int loop2 = 0; loop2 < candidatesTiedForLastPlace.Count(); loop2++)
                             {
                                 Console.WriteLine($"{loop2 + 1} - {candidatesTiedForLastPlace.ElementAt(loop2).Name}");
@@ -79,6 +80,7 @@ namespace RankedChoiceVotingCalculator.Classes
                             Candidates.Where(x => x.Name == candidatesTiedForLastPlace.ElementAt(candidateNumberToRemove - 1).Name).First().Status = CandidateStatus.Out;
                         }
                         break;
+
                     default:
                         break;
                 }
@@ -90,7 +92,7 @@ namespace RankedChoiceVotingCalculator.Classes
             var existingSheet = excelWorkbook.Worksheets.Where(x => x.Name == Name);
             if (existingSheet.Any())
             {
-                excelWorkbook.Worksheets.Delete(excelWorkbook.Worksheets.Where(x => x.Name == Name).First().Index);
+                excelWorkbook.Worksheets.Delete(excelWorkbook.Worksheets.First(x => x.Name == Name).Index);
             }
             ExcelWorksheet newWorksheet = excelWorkbook.Worksheets.Add(Name);
 

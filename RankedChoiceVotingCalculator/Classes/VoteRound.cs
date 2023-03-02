@@ -33,7 +33,7 @@ namespace RankedChoiceVotingCalculator.Classes
             {
                 for (int loop = 1; loop <= candidates.Count; loop++)
                 {
-                    Candidate currentPreference = candidates.Where(x => x.Name == vote.OrderPreference[loop]).First();
+                    Candidate currentPreference = candidates.First(x => x.Name == vote.OrderPreference[loop]);
                     if (currentPreference.Status != CandidateStatus.Out)
                     {
                         currentPreference.FirstPlaceVotes++;

@@ -73,9 +73,7 @@ namespace RankedChoiceVotingCalculator
 
         private static int ExcelColumnNameToNumber(string columnTitle)
         {
-            int sum = columnTitle.Select((c, i) => ((c - 'A' + 1) * ((int)Math.Pow(26, columnTitle.Length - i - 1)))).Sum();
-
-            return sum;
+            return columnTitle.Select((c, i) => ((c - 'A' + 1) * ((int)Math.Pow(26, columnTitle.Length - i - 1)))).Sum();
         }
     }
 }
