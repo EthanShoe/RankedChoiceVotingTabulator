@@ -15,11 +15,19 @@ namespace RankedChoiceVotingCalculator
             //open results file
             if (args.Length == 0)
             {
-                Console.WriteLine("Please input an Excel file by dragging it over the exe.");
+                Console.WriteLine("Please input an Excel file by dragging it over the exe");
                 Console.ReadLine();
                 return;
             }
             string resultsFilePath = args[0];
+
+            if (Path.GetExtension(resultsFilePath) != ".xlsx")
+            {
+                Console.WriteLine("Please only input an Excel file (.xlsx)");
+                Console.ReadLine();
+                return;
+            }
+
             FileInfo fileInfo = new FileInfo(resultsFilePath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             ExcelPackage package = new ExcelPackage(fileInfo);
@@ -43,10 +51,23 @@ namespace RankedChoiceVotingCalculator
                 voteCategory.PrintResults(package.Workbook);
             }
 
-            //save file
-            package.Save();
-
-            //open new Excel file
+            bool fileSuccessfullySaved = false;
+            while (!fileSuccessfullySaved)
+            {
+                try
+                {
+                    //save file
+                    package.Save();
+                    fileSuccessfullySaved = true;
+                }
+                catch (InvalidOperationException)
+                {
+                    Console.WriteLine("Save failed: please close the Excel file that you submitted and press enter to try again");
+                    Console.ReadLine();
+                }
+            }
+            
+            //open Excel file
             Process.Start(new ProcessStartInfo(resultsFilePath) { UseShellExecute = true });
         }
 

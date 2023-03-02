@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static RankedChoiceVotingCalculator.Classes.Candidate;
 
 namespace RankedChoiceVotingCalculator.Classes
 {
@@ -22,7 +23,7 @@ namespace RankedChoiceVotingCalculator.Classes
         public List<Vote> Votes { get; set; }
         public int MinimumThreshold { get; set; }
 
-        public Candidate SearchForWinner()
+        public WinnerSearchResult SearchForWinner()
         {
             List<Candidate> candidates = new List<Candidate>();
             candidates.AddRange(Candidates);
@@ -33,7 +34,7 @@ namespace RankedChoiceVotingCalculator.Classes
                 for (int loop = 1; loop <= candidates.Count; loop++)
                 {
                     Candidate currentPreference = candidates.Where(x => x.Name == vote.OrderPreference[loop]).First();
-                    if (!currentPreference.IsOut)
+                    if (currentPreference.Status != CandidateStatus.Out)
                     {
                         currentPreference.FirstPlaceVotes++;
                         break;
@@ -43,43 +44,34 @@ namespace RankedChoiceVotingCalculator.Classes
 
             var candidatesAboveMinimumThreshold = candidates.Where(x => x.FirstPlaceVotes >= MinimumThreshold);
             if (!candidatesAboveMinimumThreshold.Any())
-            { //no winner
-                if (candidates.Where(x => !x.IsOut).Count() <= 2)
+            {
+                if (candidates.Where(x => x.Status != CandidateStatus.Out).Count() <= 2)
                 {
                     Console.WriteLine("There is a tie for final winner");
-                    return null;
+                    return WinnerSearchResult.Found;
                 }
 
-                Candidate candidateToRemove = candidates.Where(x => !x.IsOut).OrderByDescending(x => x.FirstPlaceVotes).Last();
-                var candidatesTiedForLastPlace = candidates.Where(x => x.FirstPlaceVotes == candidateToRemove.FirstPlaceVotes);
-                if (candidatesTiedForLastPlace.Count() > 1)
+                int bottomCandidateVoteCount = candidates.Where(x => x.Status != CandidateStatus.Out).OrderByDescending(x => x.FirstPlaceVotes).Last().FirstPlaceVotes;
+                var bottomCandidates = candidates.Where(x => x.FirstPlaceVotes == bottomCandidateVoteCount);
+                if (bottomCandidates.Count() > 1)
                 {
-                    Console.WriteLine("There is a tie in a non-final round:");
-                    for (int loop = 0; loop < candidatesTiedForLastPlace.Count(); loop++)
-                    {
-                        Console.WriteLine($"{loop + 1} - {candidatesTiedForLastPlace.ElementAt(loop).Name}");
-                    }
-                    Console.Write("Please enter the number of the candidate you want to remove this rounnd: ");
-                    int candidateNumberToRemove = 0;
-                    while (!int.TryParse(Console.ReadLine(), out candidateNumberToRemove) || !(candidateNumberToRemove > 0) || !(candidateNumberToRemove <= candidatesTiedForLastPlace.Count()))
-                    {
-                        Console.WriteLine("Please enter a valid number that is shown next to a candidate");
-                    }
-                    candidateToRemove = candidatesTiedForLastPlace.ElementAt(candidateNumberToRemove - 1);
+                    bottomCandidates.ToList().ForEach(x => x.Status = CandidateStatus.NeedsTieBreaking);
+                    return WinnerSearchResult.NonFinalTie;
                 }
-                candidateToRemove.IsOut = true;
 
-                return candidateToRemove;
-            }
-            else if (candidatesAboveMinimumThreshold.Count() > 1)
-            {
-                Console.WriteLine("There are more than two candidates above minimum threshold (this should not be possible)");
-                return null;
+                return WinnerSearchResult.NotFound;
             }
             else
             {
-                return null;
+                return WinnerSearchResult.Found;
             }
+        }
+
+        public enum WinnerSearchResult
+        {
+            Found,
+            NotFound,
+            NonFinalTie
         }
     }
 }

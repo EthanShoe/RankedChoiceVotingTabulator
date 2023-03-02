@@ -13,13 +13,20 @@ namespace RankedChoiceVotingCalculator.Classes
             Name = name;
             FirstPlaceVotes = 0;
             Position = 0;
-            IsOut = false;
+            Status = CandidateStatus.In;
         }
 
         public string Name { get; set; }
         public int FirstPlaceVotes { get; set; }
         public int Position { get; set; }
-        public bool IsOut { get; set; }
+        public CandidateStatus Status { get; set; }
+
+        public enum CandidateStatus
+        {
+            In,
+            Out,
+            NeedsTieBreaking
+        }
 
         public Candidate Clone()
         {
@@ -28,7 +35,7 @@ namespace RankedChoiceVotingCalculator.Classes
                 Name = Name,
                 FirstPlaceVotes = FirstPlaceVotes,
                 Position = Position,
-                IsOut = IsOut
+                Status = Status
             };
         }
     }

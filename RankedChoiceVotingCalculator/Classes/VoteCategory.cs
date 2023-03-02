@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static RankedChoiceVotingCalculator.Classes.VoteRound;
+using static RankedChoiceVotingCalculator.Classes.Candidate;
 
 namespace RankedChoiceVotingCalculator.Classes
 {
@@ -44,14 +46,41 @@ namespace RankedChoiceVotingCalculator.Classes
             {
                 VoteRound voteRound = new VoteRound(VoteRounds.Count + 1, Candidates, Votes, MinimumThreshold);
                 VoteRounds.Add(voteRound);
-                Candidate candidateToRemove = voteRound.SearchForWinner();
-                if (candidateToRemove == null)
+                WinnerSearchResult searchResult = voteRound.SearchForWinner();
+                switch (searchResult)
                 {
-                    return;
-                }
-                else
-                {
-                    Candidates.Where(x => x.Name == candidateToRemove.Name).First().IsOut = true;
+                    case WinnerSearchResult.Found:
+                        return;
+                    case WinnerSearchResult.NotFound:
+                        Candidates.Where(x => x.Name == voteRound.Candidates.Where(y => y.Status != CandidateStatus.Out).OrderByDescending(x => x.FirstPlaceVotes).Last().Name).First().Status = CandidateStatus.Out;
+                        break;
+                    case WinnerSearchResult.NonFinalTie:
+                        //search first vote round to see if the candidates had different scores
+                        var currentlyTiedCandidatesFromFirstRound = VoteRounds[0].Candidates.Where(x => voteRound.Candidates.Where(x => x.Status == CandidateStatus.NeedsTieBreaking).Any(y => y.Name == x.Name)).OrderByDescending(x => x.FirstPlaceVotes);
+                        var candidatesTiedForLastPlace = currentlyTiedCandidatesFromFirstRound.Where(x => x.FirstPlaceVotes == currentlyTiedCandidatesFromFirstRound.Last().FirstPlaceVotes);
+                        if (candidatesTiedForLastPlace.Count() == 1)
+                        {
+                            Candidates.Where(x => x.Name == candidatesTiedForLastPlace.First().Name).First().Status = CandidateStatus.Out;
+                        }
+                        else
+                        {
+                            Console.WriteLine("There is a tie in a non-final round:");
+                            for (int loop2 = 0; loop2 < candidatesTiedForLastPlace.Count(); loop2++)
+                            {
+                                Console.WriteLine($"{loop2 + 1} - {candidatesTiedForLastPlace.ElementAt(loop2).Name}");
+                            }
+                            Console.Write("Please enter the number of the candidate you want to remove this rounnd: ");
+                            int candidateNumberToRemove = 0;
+                            while (!int.TryParse(Console.ReadLine(), out candidateNumberToRemove) || !(candidateNumberToRemove > 0) || !(candidateNumberToRemove <= candidatesTiedForLastPlace.Count()))
+                            {
+                                Console.WriteLine("Please enter a valid number that is shown next to a candidate");
+                            }
+                            
+                            Candidates.Where(x => x.Name == candidatesTiedForLastPlace.ElementAt(candidateNumberToRemove - 1).Name).First().Status = CandidateStatus.Out;
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
         }
