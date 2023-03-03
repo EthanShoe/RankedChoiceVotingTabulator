@@ -11,7 +11,7 @@ Downloading the data from a Microsoft Form (exported as an Excel file) puts the 
 
 ![Image of how column data is formatted](https://user-images.githubusercontent.com/28065361/222295710-f7569158-f268-4892-beed-4cfe10acf40b.png)
 
-The RankedChoiceVotingTabulator will parse through said data calculate the winner based on ranked choice voting principles:
+The RankedChoiceVotingTabulator will parse through said data calculate the winner based on certain ranked choice voting principles [(how this application determines the winner)](https://github.com/EthanShoe/RankedChoiceVotingTabulator/blob/master/README.md#how-the-winner-is-determined):
 
 ![Image of how data is formatted after tabulation](https://user-images.githubusercontent.com/28065361/222295708-8c1ed9b1-f0c2-4ebd-8338-7fa59623a667.png)
 
