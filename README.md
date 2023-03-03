@@ -2,7 +2,7 @@
 A C# .NET Core console application to take ranking question results from Microsoft Forms and tabulate them into ranked choice voting.
 
 ## Description
-Microsoft Forms has a "ranking" question type available to put on a form. This question type uses a [point system](https://techcommunity.microsoft.com/t5/microsoft-forms/microsoft-forms-ranking-question-type-calculation-methodology/m-p/2057168#:~:text=i%20dont%20know%20the%20official%20name%2C%20but%20i%20like%20to%20think%20of%20it%20as%20points) to determine the "winner", but ranked choice voting can sometimes create a different result.
+Microsoft Forms has a "ranking" question type available to put on a form. This question type uses a [point system](https://techcommunity.microsoft.com/t5/microsoft-forms/microsoft-forms-ranking-question-type-calculation-methodology/m-p/2057168#:~:text=i%20dont%20know%20the%20official%20name%2C%20but%20i%20like%20to%20think%20of%20it%20as%20points) to determine the "winner", but ranked choice voting can sometimes yield a different result.
 
 The goal of RankedChoiceVotingTabulator is to convert the data gathered from the Microsoft Forms ranking question into a ranked choice voting result.
 
@@ -21,7 +21,7 @@ The RankedChoiceVotingTabulator will parse through said data calculate the winne
     - Make sure that the file is not in protected view
     - Make sure that only result columns (column F and onward) are from ranked questions
 2. Run the application with the Excel file as an argument
-    - The easiest way to do this is to drag the Excel file over the application
+    - The easiest way to do this is to drag the Excel file over the application in File Explorer
 3. Break any ties that occur during tabulation
     - There will be prompts for this should they happen
 
