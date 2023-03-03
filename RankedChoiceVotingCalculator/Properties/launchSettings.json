@@ -2,7 +2,7 @@
   "profiles": {
     "RankedChoiceVotingCalculator": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Users\\engwit\\Downloads\\Ballroom Officer Election 2023 (2)(1-6).xlsx\""
+      "commandLineArgs": "\"C:\\Users\\engwit\\Downloads\\Election Test(1-24).xlsx\""
     }
   }
 }

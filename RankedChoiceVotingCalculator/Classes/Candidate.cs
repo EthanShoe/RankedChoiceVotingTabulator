@@ -25,7 +25,9 @@ namespace RankedChoiceVotingCalculator.Classes
         {
             In,
             Out,
-            NeedsTieBreaking
+            BeingRemoved,
+            NeedsTieBreaking,
+            Winner
         }
 
         public Candidate Clone()

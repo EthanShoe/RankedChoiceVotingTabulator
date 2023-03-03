@@ -45,13 +45,15 @@ namespace RankedChoiceVotingCalculator.Classes
             var candidatesAboveMinimumThreshold = candidates.Where(x => x.FirstPlaceVotes >= MinimumThreshold);
             if (!candidatesAboveMinimumThreshold.Any())
             {
-                if (candidates.Where(x => x.Status != CandidateStatus.Out).Count() <= 2)
+                var candidatesNotOut = candidates.Where(x => x.Status != CandidateStatus.Out);
+                if (candidatesNotOut.Count() <= 2)
                 {
                     Console.WriteLine("There is a tie for final winner");
+                    candidatesNotOut.ToList().ForEach(x => x.Status = CandidateStatus.Winner);
                     return WinnerSearchResult.Found;
                 }
 
-                int bottomCandidateVoteCount = candidates.Where(x => x.Status != CandidateStatus.Out).OrderByDescending(x => x.FirstPlaceVotes).Last().FirstPlaceVotes;
+                int bottomCandidateVoteCount = candidatesNotOut.OrderByDescending(x => x.FirstPlaceVotes).Last().FirstPlaceVotes;
                 var bottomCandidates = candidates.Where(x => x.FirstPlaceVotes == bottomCandidateVoteCount);
                 if (bottomCandidates.Count() > 1)
                 {
@@ -59,10 +61,12 @@ namespace RankedChoiceVotingCalculator.Classes
                     return WinnerSearchResult.NonFinalTie;
                 }
 
+                bottomCandidates.First().Status = CandidateStatus.BeingRemoved;
                 return WinnerSearchResult.NotFound;
             }
             else
             {
+                candidatesAboveMinimumThreshold.First().Status = CandidateStatus.Winner;
                 return WinnerSearchResult.Found;
             }
         }

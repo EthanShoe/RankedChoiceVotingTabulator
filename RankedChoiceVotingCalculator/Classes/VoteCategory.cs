@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using static RankedChoiceVotingCalculator.Classes.VoteRound;
 using static RankedChoiceVotingCalculator.Classes.Candidate;
+using System.Drawing;
+using OfficeOpenXml.Style;
 
 namespace RankedChoiceVotingCalculator.Classes
 {
@@ -52,7 +54,7 @@ namespace RankedChoiceVotingCalculator.Classes
                         return;
 
                     case WinnerSearchResult.NotFound:
-                        Candidates.First(x => x.Name == voteRound.Candidates.Where(y => y.Status != CandidateStatus.Out).OrderByDescending(x => x.FirstPlaceVotes).Last().Name).Status = CandidateStatus.Out;
+                        Candidates.First(x => x.Name == voteRound.Candidates.First(y => y.Status == CandidateStatus.BeingRemoved).Name).Status = CandidateStatus.Out;
                         break;
 
                     case WinnerSearchResult.NonFinalTie:
@@ -70,14 +72,16 @@ namespace RankedChoiceVotingCalculator.Classes
                             {
                                 Console.WriteLine($"{loop2 + 1} - {candidatesTiedForLastPlace.ElementAt(loop2).Name}");
                             }
-                            Console.Write("Please enter the number of the candidate you want to remove this rounnd: ");
+                            Console.Write("Please enter the number of the candidate you want to remove this round: ");
                             int candidateNumberToRemove = 0;
                             while (!int.TryParse(Console.ReadLine(), out candidateNumberToRemove) || !(candidateNumberToRemove > 0) || !(candidateNumberToRemove <= candidatesTiedForLastPlace.Count()))
                             {
                                 Console.WriteLine("Please enter a valid number that is shown next to a candidate");
                             }
-                            
-                            Candidates.Where(x => x.Name == candidatesTiedForLastPlace.ElementAt(candidateNumberToRemove - 1).Name).First().Status = CandidateStatus.Out;
+
+                            string nameOfCandidateToRemove = candidatesTiedForLastPlace.ElementAt(candidateNumberToRemove - 1).Name;
+                            voteRound.Candidates.First(x => x.Name == nameOfCandidateToRemove).Status = CandidateStatus.BeingRemoved;
+                            Candidates.First(x => x.Name == nameOfCandidateToRemove).Status = CandidateStatus.Out;
                         }
                         break;
 
@@ -110,8 +114,20 @@ namespace RankedChoiceVotingCalculator.Classes
                 for (int rowLoop = 0; rowLoop < voteRound.Candidates.Count; rowLoop++)
                 {
                     newWorksheet.Cells[rowLoop + FIRST_ROW, columnLoop + FIRST_COLUMN].Value = voteRound.Candidates[rowLoop].FirstPlaceVotes;
+                    if (voteRound.Candidates[rowLoop].Status == CandidateStatus.BeingRemoved)
+                    {
+                        ColorCell(ref newWorksheet, rowLoop + FIRST_ROW, columnLoop + FIRST_COLUMN, Color.LightGray);
+                    }
+
+                    if (voteRound.Candidates[rowLoop].Status == CandidateStatus.Winner)
+                    {
+                        ColorCell(ref newWorksheet, rowLoop + FIRST_ROW, columnLoop + FIRST_COLUMN, Color.Yellow);
+                        ColorCell(ref newWorksheet, rowLoop + FIRST_ROW, 1, Color.Yellow);
+                    }
                 }
             }
+
+            newWorksheet.Cells[newWorksheet.Dimension.Address].AutoFitColumns();
         }
 
         public List<string> ConvertVoteStringToListOfVotes(string voteString)
@@ -120,6 +136,12 @@ namespace RankedChoiceVotingCalculator.Classes
             //remove last item since it's an empty string
             voteList.RemoveAt(voteList.Count - 1);
             return voteList;
+        }
+
+        public void ColorCell(ref ExcelWorksheet worksheet, int rowNumber, int columnNumber, Color color)
+        {
+            worksheet.Cells[rowNumber, columnNumber].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Cells[rowNumber, columnNumber].Style.Fill.BackgroundColor.SetColor(color);
         }
     }
 }
