@@ -46,13 +46,6 @@ namespace RankedChoiceVotingCalculator.Classes
             if (!candidatesAboveMinimumThreshold.Any())
             {
                 var candidatesNotOut = candidates.Where(x => x.Status != CandidateStatus.Out);
-                if (candidatesNotOut.Count() <= 2)
-                {
-                    Console.WriteLine("There is a tie for final winner");
-                    candidatesNotOut.ToList().ForEach(x => x.Status = CandidateStatus.Winner);
-                    return WinnerSearchResult.Found;
-                }
-
                 int bottomCandidateVoteCount = candidatesNotOut.OrderByDescending(x => x.FirstPlaceVotes).Last().FirstPlaceVotes;
                 var bottomCandidates = candidates.Where(x => x.FirstPlaceVotes == bottomCandidateVoteCount);
                 if (bottomCandidates.Count() > 1)

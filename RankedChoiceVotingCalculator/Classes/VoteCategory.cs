@@ -15,18 +15,13 @@ namespace RankedChoiceVotingCalculator.Classes
         public VoteCategory(string name, string candidateNamesString, int totalNumberOfVotes)
         {
             Name = name;
-
             List<string> candidateNames = ConvertVoteStringToListOfVotes(candidateNamesString);
             NumberOfRounds = candidateNames.Count;
-
             Candidates = new List<Candidate>();
-            foreach (string candidateName in candidateNames)
-            {
-                Candidates.Add(new Candidate(candidateName));
-            }
+            candidateNames.ForEach(x => Candidates.Add(new Candidate(x)));
+            Candidates = Candidates.OrderBy(x => x.Name).ToList();
             Votes = new List<Vote>();
             VoteRounds = new List<VoteRound>();
-
             MinimumThreshold = (int)Math.Floor((decimal)totalNumberOfVotes / 2) + 1;
         }
 
@@ -68,12 +63,12 @@ namespace RankedChoiceVotingCalculator.Classes
                         }
                         else
                         {
-                            Console.WriteLine($"There is a tie in a non-final round for {Name}:");
+                            Console.WriteLine($"There is a tie for {Name}:");
                             for (int loop2 = 0; loop2 < candidatesTiedForLastPlace.Count(); loop2++)
                             {
                                 Console.WriteLine($"{loop2 + 1} - {candidatesTiedForLastPlace.ElementAt(loop2).Name}");
                             }
-                            Console.Write("Please enter the number of the candidate you want to remove this round: ");
+                            Console.Write("Please enter the number of the candidate you want to eliminate from this round: ");
                             int candidateNumberToRemove = 0;
                             while (!int.TryParse(Console.ReadLine(), out candidateNumberToRemove) || !(candidateNumberToRemove > 0) || !(candidateNumberToRemove <= candidatesTiedForLastPlace.Count()))
                             {
