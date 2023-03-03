@@ -13,7 +13,7 @@ Downloading the data from a Microsoft Form (exported as an Excel file) puts the 
 
 The RankedChoiceVotingTabulator will parse through said data calculate the winner based on certain ranked choice voting principles [(how this application determines the winner)](https://github.com/EthanShoe/RankedChoiceVotingTabulator/blob/master/README.md#how-the-winner-is-determined):
 
-![Image of how data is formatted after tabulation](https://user-images.githubusercontent.com/28065361/222295708-8c1ed9b1-f0c2-4ebd-8338-7fa59623a667.png)
+![Image of how data is formatted after tabulation](https://user-images.githubusercontent.com/28065361/222796036-2b8af4b3-268c-4b73-9dee-f050f2109cb8.png)
 
 ## How to Use
 
