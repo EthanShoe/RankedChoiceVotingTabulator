@@ -63,6 +63,7 @@ namespace RankedChoiceVotingCalculator.Classes
                         var candidatesTiedForLastPlace = currentlyTiedCandidatesFromFirstRound.Where(x => x.FirstPlaceVotes == currentlyTiedCandidatesFromFirstRound.Last().FirstPlaceVotes);
                         if (candidatesTiedForLastPlace.Count() == 1)
                         {
+                            voteRound.Candidates.First(x => x.Name == candidatesTiedForLastPlace.First().Name).Status = CandidateStatus.BeingRemoved;
                             Candidates.First(x => x.Name == candidatesTiedForLastPlace.First().Name).Status = CandidateStatus.Out;
                         }
                         else
