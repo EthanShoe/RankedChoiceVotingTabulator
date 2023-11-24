@@ -1,12 +1,4 @@
-﻿using RankedChoiceVotingTabulator.Wpf.Stores;
-using RankedChoiceVotingTabulator.Wpf.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RankedChoiceVotingTabulator.Wpf.Services
+﻿namespace RankedChoiceVotingTabulator.Wpf.Services
 {
     public class NavigationService<TViewModel>
        where TViewModel : ViewModelBase

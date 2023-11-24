@@ -1,10 +1,6 @@
-﻿using RankedChoiceVotingTabulator.Wpf.Stores;
+﻿using OfficeOpenXml;
+using RankedChoiceVotingTabulator.Wpf.Stores;
 using RankedChoiceVotingTabulator.Wpf.ViewModels;
-using RankedChoiceVotingTabulator.Wpf;
-using System.Configuration;
-using System.Data;
-using System.Windows;
-
 namespace RankedChoiceVotingTabulator.Wpf
 {
     /// <summary>
@@ -14,7 +10,8 @@ namespace RankedChoiceVotingTabulator.Wpf
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            NavigationStore navigationStore = new NavigationStore();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            NavigationStore navigationStore = new();
 
             MainWindow = new MainWindow()
             {

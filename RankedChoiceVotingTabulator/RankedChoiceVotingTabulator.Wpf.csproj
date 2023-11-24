@@ -8,4 +8,20 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Using Include="System.Windows" />
+    <Using Include="System.Collections.ObjectModel" />
+    <Using Include="RankedChoiceVotingTabulator.Wpf.Models;" />
+    <Using Include="RankedChoiceVotingTabulator.Wpf.Views;" />
+    <Using Include="RankedChoiceVotingTabulator.Wpf.ViewModels;" />
+    <Using Include="RankedChoiceVotingTabulator.Wpf.Stores;" />
+    <Using Include="RankedChoiceVotingTabulator.Wpf.Commands;" />
+    <Using Include="RankedChoiceVotingTabulator.Wpf.Wrappers;" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EPPlus" Version="7.0.2" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+  </ItemGroup>
+
 </Project>
