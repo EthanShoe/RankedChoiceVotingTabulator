@@ -41,7 +41,7 @@
                             <StackPanel HorizontalAlignment="Stretch" Margin="5" >
                                 <CheckBox Content="{Binding Title}" IsChecked="{Binding IsActive}" HorizontalAlignment="Stretch" IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="20" />
                                 <TextBlock Text="{Binding VoteCount}" Margin="20,0,0,0"/>
-                                <TextBlock Text="{Binding Candidates}" Margin="20,0,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding CandidatesString}" Margin="20,0,0,0" TextWrapping="Wrap"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>

@@ -17,6 +17,7 @@
     <Using Include="RankedChoiceVotingTabulator.Wpf.Stores;" />
     <Using Include="RankedChoiceVotingTabulator.Wpf.Commands;" />
     <Using Include="RankedChoiceVotingTabulator.Wpf.Wrappers;" />
+    <Using Include="RankedChoiceVotingTabulator.Wpf.Services;" />
   </ItemGroup>
 
   <ItemGroup>

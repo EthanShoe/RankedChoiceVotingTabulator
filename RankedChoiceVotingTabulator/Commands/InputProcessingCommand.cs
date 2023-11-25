@@ -1,4 +1,5 @@
 ﻿using OfficeOpenXml;
+using RankedChoiceVotingTabulator.Wpf.Services;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -56,22 +57,8 @@ namespace RankedChoiceVotingTabulator.Wpf.Commands
             var fileInfo = new FileInfo(excelFilePath);
             _viewModel.ExcelPackage = new ExcelPackageWrapper(new ExcelPackage(fileInfo));
             var mainWorksheet = new ExcelWorksheetWrapper(_viewModel.ExcelPackage.GetFirstSheet());
-            const int FIRST_COLUMN = 6; // Column F is the first column with results
-
-            var result = new List<ColumnData>();
-            for (int columnNumber = FIRST_COLUMN; columnNumber <= mainWorksheet.ColumnCount; columnNumber++)
-            {
-                var columnCells = mainWorksheet.GetColumnCellsByColumnNumber(columnNumber);
-                var columnCellsWithoutTitle = columnCells.Skip(1).Where(x => !string.IsNullOrEmpty(x));
-                result.Add(new ColumnData(
-                    columnCells.First(),
-                    columnNumber,
-                    columnCellsWithoutTitle.Count(),
-                    mainWorksheet.RowCount - 1, 
-                    string.Join(", ", columnCellsWithoutTitle.First().Split(";").SkipLast(1).ToArray())
-                    ));
-            }
-            return result;
+            var service = new InputProcessingService();
+            return service.GetColumnData(mainWorksheet);
         }
 
         private void ShowError(string message)

@@ -9,12 +9,7 @@ namespace RankedChoiceVotingTabulator.Wpf.Wrappers
         public ExcelWorksheetWrapper(ExcelWorksheet worksheet)
         {
             _worksheet = worksheet ?? throw new ArgumentNullException(nameof(worksheet));
-            RowCount = _worksheet.Dimension.Rows;
-            ColumnCount = _worksheet.Dimension.Columns;
         }
-
-        public int RowCount { get; set; }
-        public int ColumnCount { get; set; }
 
         public void SetCell(int row, int column, object value)
         {
@@ -26,10 +21,20 @@ namespace RankedChoiceVotingTabulator.Wpf.Wrappers
             return _worksheet.Cells[row, column].Value;
         }
 
+        public int GetRowCount()
+        {
+            return _worksheet.Dimension.Rows;
+        }
+
+        public int GetColumnCount()
+        {
+            return _worksheet.Dimension.Columns;
+        }
+
         public List<string> GetColumnCellsByColumnNumber(int columnNumber)
         {
-            var columnCells = _worksheet.Cells[1, columnNumber, RowCount, columnNumber];
-            return columnCells.Select(cell => cell.Value?.ToString()).ToList();
+            var columnCells = _worksheet.Cells[1, columnNumber, GetRowCount(), columnNumber];
+            return columnCells.Select(cell => cell.Value.ToString()).ToList();
         }
     }
 
@@ -37,6 +42,8 @@ namespace RankedChoiceVotingTabulator.Wpf.Wrappers
     {
         void SetCell(int row, int column, object value);
         object GetCell(int row, int column);
+        int GetRowCount();
+        int GetColumnCount();
         List<string> GetColumnCellsByColumnNumber(int columnNumber);
     }
 }
