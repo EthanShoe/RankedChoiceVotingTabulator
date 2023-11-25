@@ -1,5 +1,6 @@
 ﻿using OfficeOpenXml;
 using System.IO;
+using System.Linq;
 using System.Windows;
 
 namespace RankedChoiceVotingTabulator.Wpf.Commands
@@ -31,7 +32,7 @@ namespace RankedChoiceVotingTabulator.Wpf.Commands
                 var results = await task;
                 aggregateException = task.Exception;
 
-                if (aggregateException.InnerExceptions.Count > 0)
+                if (aggregateException?.InnerExceptions.Count > 0)
                 {
                     foreach (var innerException in aggregateException.InnerExceptions)
                     {
@@ -53,15 +54,24 @@ namespace RankedChoiceVotingTabulator.Wpf.Commands
         private List<ColumnData> LongRunningTask(string excelFilePath)
         {
             var fileInfo = new FileInfo(excelFilePath);
-            var package = new ExcelPackageWrapper(new ExcelPackage(fileInfo));
-            var mainWorksheet = new ExcelWorksheetWrapper(package.GetFirstSheet());
+            _viewModel.ExcelPackage = new ExcelPackageWrapper(new ExcelPackage(fileInfo));
+            var mainWorksheet = new ExcelWorksheetWrapper(_viewModel.ExcelPackage.GetFirstSheet());
             const int FIRST_COLUMN = 6; // Column F is the first column with results
-            int rowCount = mainWorksheet.GetRowCount();
 
-            for (int columnNumber = FIRST_COLUMN; columnNumber <= mainWorksheet.GetColumnCount(); columnNumber++)
+            var result = new List<ColumnData>();
+            for (int columnNumber = FIRST_COLUMN; columnNumber <= mainWorksheet.ColumnCount; columnNumber++)
             {
-
+                var columnCells = mainWorksheet.GetColumnCellsByColumnNumber(columnNumber);
+                var columnCellsWithoutTitle = columnCells.Skip(1).Where(x => !string.IsNullOrEmpty(x));
+                result.Add(new ColumnData(
+                    columnCells.First(),
+                    columnNumber,
+                    columnCellsWithoutTitle.Count(),
+                    mainWorksheet.RowCount - 1, 
+                    string.Join(", ", columnCellsWithoutTitle.First().Split(";").SkipLast(1).ToArray())
+                    ));
             }
+            return result;
         }
 
         private void ShowError(string message)

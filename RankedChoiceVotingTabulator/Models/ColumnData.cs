@@ -2,17 +2,19 @@
 {
     public class ColumnData
     {
-        public ColumnData(string name, int columnNumber, int rowsWithData, int rowsTotal)
+        public ColumnData(string title, int columnNumber, int rowsWithData, int rowsTotal, string candidates)
         {
-            Name = name;
+            Title = title;
             ColumnNumber = columnNumber;
-            Info = $"{rowsWithData} entries of {rowsTotal} total rows";
+            VoteCount = $"{rowsWithData} votes of {rowsTotal} total";
+            Candidates = $"Candidates: {candidates}";
             IsActive = true;
         }
 
-        public string Name { get; set; }
+        public string Title { get; set; }
         public int ColumnNumber { get; set; }
-        public string Info { get; set; }
+        public string VoteCount { get; set; }
+        public string Candidates { get; set; }
         public bool IsActive { get; set; }
     }
 }
