@@ -9,11 +9,11 @@ The goal of RankedChoiceVotingTabulator is to convert the data gathered from the
 
 Downloading the data from a Microsoft Form (exported as an Excel file) puts the results from a ranking question into one column so that each cell has a string of the candidates in order from first to last delimited by a semicolon:
 
-![Image of how column data is formatted](https://user-images.githubusercontent.com/28065361/222295710-f7569158-f268-4892-beed-4cfe10acf40b.png)
+![Image of how column data is formatted](https://github.com/EthanShoe/RankedChoiceVotingTabulator/assets/28065361/480fc898-3f8f-48f8-bda2-3e734ce7fd40)
 
 The RankedChoiceVotingTabulator will parse through said data calculate the winner based on certain ranked choice voting principles [(how this application determines the winner)](https://github.com/EthanShoe/RankedChoiceVotingTabulator/blob/master/README.md#how-the-winner-is-determined):
 
-![Image of how data is formatted after tabulation](https://user-images.githubusercontent.com/28065361/226769081-ee023fb8-d43c-4a52-bb00-73ef05405258.png)
+![Image of how data is formatted after tabulation](https://github.com/EthanShoe/RankedChoiceVotingTabulator/assets/28065361/9e561fb4-865b-4e4b-b3ce-efc46b340950)
 
 ## How to Use
 
@@ -22,8 +22,10 @@ The RankedChoiceVotingTabulator will parse through said data calculate the winne
     - Make sure that the file is not in protected view
 3. Run the application
 4. Input the Excel file
-5. Click Tabulate
-6. Results are placed in new tabs on the file corresponding to each original ranked question
+5. Choose which columns from the file you want to tabulate
+	- The application will automatically exclude columns that appear to not be from a ranked form question
+6. Click Tabulate
+7. Results are placed in new tabs on the file corresponding to each original ranked question
 	- The Excel file will open automatically after tabulation is complete
 
 ## How the Winner Is Determined
