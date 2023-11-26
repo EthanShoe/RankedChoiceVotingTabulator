@@ -35,6 +35,8 @@ namespace RankedChoiceVotingTabulator.Wpf.Views
             };
 
             openFileDialog.ShowDialog();
+            if (string.IsNullOrEmpty(openFileDialog.FileName))
+                return;
 
             ((HomeViewModel)DataContext).ExcelFilePath = openFileDialog.FileName;
         }

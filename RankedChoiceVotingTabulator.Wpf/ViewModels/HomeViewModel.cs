@@ -12,6 +12,7 @@ namespace RankedChoiceVotingTabulator.Wpf.ViewModels
             ColumnData = new();
 
             InputProcessingCommand = new InputProcessingCommand(this);
+            TabulateCommand = new TabulateCommand(this);
         }
 
         private string? _excelFilePath;
@@ -25,5 +26,6 @@ namespace RankedChoiceVotingTabulator.Wpf.ViewModels
         public bool ControlsEnabled { get => _controlsEnabled; set { SetProperty(ref _controlsEnabled, value); } }
 
         public ICommand InputProcessingCommand { get; }
+        public ICommand TabulateCommand { get; }
     }
 }

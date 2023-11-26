@@ -16,6 +16,16 @@ namespace RankedChoiceVotingTabulator.Wpf.Wrappers
         {
             return _package.Workbook.Worksheets.FirstOrDefault();
         }
+
+        public ExcelWorksheet NewSheet(string title)
+        {
+            var existingSheet = _package.Workbook.Worksheets.FirstOrDefault(x => x.Name == title);
+            if (existingSheet != null)
+            {
+                _package.Workbook.Worksheets.Delete(existingSheet);
+            }
+            return _package.Workbook.Worksheets.Add(title);
+        }
     }
 
     public interface IExcelPackageWrapper

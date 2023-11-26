@@ -50,7 +50,7 @@
                     <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="White"/>
                     <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#aaaeb0"/>
                     <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="Black"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#194b9b"/>
+                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#FF2B61B7"/>
                     <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="White"/>
                     <!-- accent -->
                     <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#FF54ADFF"/>

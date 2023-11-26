@@ -21,9 +21,9 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
                 result.Add(new ColumnData(
                     columnCells.First(),
                     columnNumber,
-                    columnCellsWithoutTitle.Count(),
+                    columnCellsWithoutTitle.ToList(),
                     excelWorksheet.GetRowCount() - 1,
-                    columnCellsWithoutTitle.Select(s => s.Split(';').SkipLast(1).ToList()).ToList().SelectMany(x => x).Distinct().OrderBy(x => x).ToList()
+                    columnCellsWithoutTitle.Select(s => s.Split(';').SkipLast(1)).SelectMany(x => x).Distinct().OrderBy(x => x).ToList()
                     ));
             }
 

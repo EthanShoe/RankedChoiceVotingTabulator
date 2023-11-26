@@ -54,6 +54,7 @@
                 <RowDefinition Height="6*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
+            <Button Grid.Row="2" Content="Tabulate" Margin="10" Background="{StaticResource PrimaryHueDarkBrush}" Command="{Binding TabulateCommand}" IsEnabled="{Binding ControlsEnabled}" />
         </Grid>
     </Grid>
 </UserControl>

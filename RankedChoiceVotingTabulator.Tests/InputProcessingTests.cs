@@ -18,8 +18,8 @@ namespace RankedChoiceVotingTabulator.Tests
             // Assert
             Assert.Single(returnData);
             Assert.Equal("Title", returnData.First().Title);
-            Assert.Equal("1 votes of 1 total", returnData.First().VoteCount);
             Assert.Equal(2, returnData.First().Candidates.Count);
+            Assert.Single(returnData.First().Votes);
             Assert.Equal(6, returnData.First().ColumnNumber);
         }
 
@@ -73,6 +73,9 @@ namespace RankedChoiceVotingTabulator.Tests
 
             // Assert
             Assert.Equal(4, returnData.First().Candidates.Count);
+            Assert.Equal(3, returnData.First().Votes.Count);
+            Assert.Equal(2, returnData.First().Votes.First().OrderPreference.Count);
+            Assert.Equal(3, returnData.First().Votes.Skip(1).First().OrderPreference.Count);
         }
 
         [Fact]
