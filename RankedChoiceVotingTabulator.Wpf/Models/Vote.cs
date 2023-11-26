@@ -8,12 +8,13 @@
             CalculateTopCandidate();
         }
 
-        public Candidate TopCandidate { get; set; }
+        public Candidate? TopCandidate { get; set; }
         public Dictionary<int, Candidate> OrderPreference { get; set; }
 
         public void CalculateTopCandidate()
         {
-            TopCandidate = OrderPreference.Where(x => x.Value.IsActive).OrderBy(x => x.Key).FirstOrDefault().Value;
+            var activeCandidates = OrderPreference.Where(x => x.Value.Status == Candidate.CandidateStatus.Active);
+            TopCandidate = activeCandidates.OrderBy(x => x.Key).FirstOrDefault().Value;
         }
     }
 }

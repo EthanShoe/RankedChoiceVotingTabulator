@@ -7,6 +7,7 @@
             Title = title;
             ColumnNumber = columnNumber;
             TotalRows = totalRows;
+            Rounds = new List<Round>();
             IsActive = true;
 
             Candidates = new List<Candidate>();
@@ -32,6 +33,7 @@
         private int TotalRows { get; set; }
         public List<Candidate> Candidates { get; set; }
         public string CandidatesString { get => $"Candidates: {string.Join(", ", Candidates.Select(x => x.Name))}"; }
+        public List<Round> Rounds { get; set; }
         public bool IsActive { get; set; }
     }
 }

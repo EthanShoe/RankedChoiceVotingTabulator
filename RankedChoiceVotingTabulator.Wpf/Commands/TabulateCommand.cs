@@ -1,4 +1,5 @@
 ﻿using OfficeOpenXml;
+using System.Diagnostics;
 using System.IO;
 
 namespace RankedChoiceVotingTabulator.Wpf.Commands
@@ -50,11 +51,19 @@ namespace RankedChoiceVotingTabulator.Wpf.Commands
         private void LongRunningTask()
         {
             var tabulationService = new TabulationService();
-            foreach (var columnData in _viewModel.ColumnData)
+            foreach (var columnData in _viewModel.ColumnData.Where(x => x.IsActive))
             {
-                tabulationService.Tabulate(columnData);
-                //new ExcelWorksheetWrapper(_viewModel.ExcelPackage.NewSheet(columnData.Title))
+                TabulationService.Tabulate(columnData);
+                TabulationService.WriteResults(columnData, new ExcelWorksheetWrapper(_viewModel.ExcelPackage.NewSheet(columnData.Title)));
             }
+
+            var response = _viewModel.ExcelPackage.Save();
+            while (response == SaveStatus.Failure)
+            {
+                response = _viewModel.ExcelPackage.Save();
+            }
+            if (response == SaveStatus.Success)
+                _viewModel.ExcelPackage.OpenFile();
         }
 
         private void ShowError(string message)
