@@ -4,7 +4,7 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
 {
     public class TabulationService
     {
-        public static void Tabulate(ColumnData columnData)
+        public static void Tabulate(HomeViewModel viewModel, ColumnData columnData)
         {
             for (int roundNumber = 1; roundNumber <= columnData.Candidates.Count; roundNumber++)
             {
@@ -24,10 +24,18 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
                 }
 
                 var lowestVoteCount = orderedActiveCandidates.LastOrDefault().Value;
-                foreach (var candidate in orderedActiveCandidates.Where(x => x.Value == lowestVoteCount).Select(x => x.Key))
+                var candidatesToBeEliminated = orderedActiveCandidates.Where(x => x.Value == lowestVoteCount).Select(x => x.Key);
+                if (viewModel.ManualTieBreaking)
                 {
-                    EliminateCandidate(roundNumber, candidate);
-                    columnData.Votes.Where(x => x.TopCandidate == candidate).ToList().ForEach(x => x.CalculateTopCandidate());
+
+                }
+                else
+                {
+                    foreach (var candidate in candidatesToBeEliminated)
+                    {
+                        EliminateCandidate(roundNumber, candidate);
+                        columnData.Votes.Where(x => x.TopCandidate == candidate).ToList().ForEach(x => x.CalculateTopCandidate());
+                    }
                 }
 
                 if (!columnData.Candidates.Where(x => x.Status != Candidate.CandidateStatus.Eliminated).Any())
