@@ -4,7 +4,9 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
 {
     public class TabulationService
     {
-        public static void Tabulate(HomeViewModel viewModel, ColumnData columnData)
+        private readonly ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+
+        public void Tabulate(HomeViewModel viewModel, ColumnData columnData)
         {
             for (int roundNumber = 1; roundNumber <= columnData.Candidates.Count; roundNumber++)
             {
@@ -19,23 +21,39 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
                 if (orderedActiveCandidates.FirstOrDefault().Value >= Math.Floor((decimal)columnData.Votes.Where(x => x.TopCandidate != null).Count() / 2) + 1)
                 {
                     orderedActiveCandidates.FirstOrDefault().Key.Status = Candidate.CandidateStatus.Winner;
-                    orderedActiveCandidates.Skip(1).ToList().ForEach(x => EliminateCandidate(roundNumber, x.Key));
+                    EliminateCandidates(columnData, roundNumber, orderedActiveCandidates.Skip(1).Select(x => x.Key), false);
                     break;
                 }
 
                 var lowestVoteCount = orderedActiveCandidates.LastOrDefault().Value;
                 var candidatesToBeEliminated = orderedActiveCandidates.Where(x => x.Value == lowestVoteCount).Select(x => x.Key);
-                if (viewModel.ManualTieBreaking)
+                if (candidatesToBeEliminated.Count() > 1 && viewModel.ManualTieBreaking)
                 {
+                    var waitHandle = new AutoResetEvent(false);
+                    CandidateSelectedEventArgs eventData = null;
+                    EventHandler<CandidateSelectedEventArgs> handler = (sender, args) =>
+                    {
+                        eventData = args;
+                        waitHandle.Set();
+                    };
 
+                    viewModel.CandidateSelected += handler;
+
+                    viewModel.NavigateToTieBreakerCommand.Execute(candidatesToBeEliminated.ToList());
+
+                    waitHandle.WaitOne();
+                    var selectedCandidate = eventData?.SelectedCandidate;
+                    viewModel.CandidateSelected -= handler;
+
+                    if (selectedCandidate != null)
+                    {
+                        candidatesToBeEliminated = candidatesToBeEliminated.Where(x => x == selectedCandidate);
+                    }
+                    EliminateCandidates(columnData, roundNumber, candidatesToBeEliminated, true);
                 }
                 else
                 {
-                    foreach (var candidate in candidatesToBeEliminated)
-                    {
-                        EliminateCandidate(roundNumber, candidate);
-                        columnData.Votes.Where(x => x.TopCandidate == candidate).ToList().ForEach(x => x.CalculateTopCandidate());
-                    }
+                    EliminateCandidates(columnData, roundNumber, candidatesToBeEliminated, true);
                 }
 
                 if (!columnData.Candidates.Where(x => x.Status != Candidate.CandidateStatus.Eliminated).Any())
@@ -45,10 +63,16 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
             }
         }
 
-        private static void EliminateCandidate(int roundNumber, Candidate candidate)
+        private static void EliminateCandidates(ColumnData columnData, int roundNumber, IEnumerable<Candidate> candidatesToBeEliminated, bool calculateTopCandidate)
         {
-            candidate.Status = Candidate.CandidateStatus.Eliminated;
-            candidate.RoundEliminated = roundNumber;
+            foreach (var candidate in candidatesToBeEliminated)
+            {
+                candidate.Status = Candidate.CandidateStatus.Eliminated;
+                candidate.RoundEliminated = roundNumber;
+
+                if (calculateTopCandidate)
+                    columnData.Votes.Where(x => x.TopCandidate == candidate).ToList().ForEach(x => x.CalculateTopCandidate());
+            }
         }
 
         public static void WriteResults(ColumnData columnData, ExcelWorksheetWrapper worksheet)

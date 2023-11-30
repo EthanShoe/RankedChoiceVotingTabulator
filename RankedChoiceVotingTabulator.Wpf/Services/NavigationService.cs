@@ -12,9 +12,12 @@
             _createViewModel = createViewModel;
         }
 
-        public void Navigate()
+        public void Navigate(TViewModel? viewModel = null)
         {
-            _navigationStore.CurrentViewModel = _createViewModel();
+            if (viewModel == null)
+                _navigationStore.CurrentViewModel = _createViewModel();
+            else
+                _navigationStore.CurrentViewModel = viewModel;
         }
     }
 }
