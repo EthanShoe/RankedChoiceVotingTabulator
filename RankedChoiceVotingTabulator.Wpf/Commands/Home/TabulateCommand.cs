@@ -53,6 +53,12 @@ namespace RankedChoiceVotingTabulator.Wpf.Commands.Home
             var tabulationService = new TabulationService();
             foreach (var columnData in _viewModel.ColumnData.Where(x => x.IsActive))
             {
+                if (columnData.Rounds.Count != 0)
+                {
+                    columnData.Rounds.Clear();
+                    columnData.Candidates.ForEach(x => x.Reset());
+                    columnData.Votes.ForEach(x => x.CalculateTopCandidate());
+                }
                 new TabulationService().Tabulate(_viewModel, columnData);
                 TabulationService.WriteResults(columnData, new ExcelWorksheetWrapper(_viewModel.ExcelPackage.NewSheet(columnData.Title)));
             }

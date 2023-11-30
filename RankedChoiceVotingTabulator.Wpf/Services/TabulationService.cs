@@ -4,8 +4,6 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
 {
     public class TabulationService
     {
-        private readonly ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-
         public void Tabulate(HomeViewModel viewModel, ColumnData columnData)
         {
             for (int roundNumber = 1; roundNumber <= columnData.Candidates.Count; roundNumber++)
