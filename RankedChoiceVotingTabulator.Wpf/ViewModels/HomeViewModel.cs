@@ -6,6 +6,8 @@ namespace RankedChoiceVotingTabulator.Wpf.ViewModels
 {
     public class HomeViewModel : ViewModelBase
     {
+        public HomeViewModel() { }
+
         public HomeViewModel(NavigationStore navigationStore, ViewModelStore viewModelStore)
         {
             ControlsEnabled = true;

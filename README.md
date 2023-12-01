@@ -1,5 +1,5 @@
 # RankedChoiceVotingTabulator
-A C# .NET WPF application to take ranking question results from Microsoft Forms and tabulate them into ranked choice voting.
+A C# WPF Desktop application to take ranking question results from Microsoft Forms and tabulate them into ranked choice voting.
 
 ## Description
 

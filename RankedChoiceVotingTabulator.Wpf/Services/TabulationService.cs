@@ -4,7 +4,7 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
 {
     public class TabulationService
     {
-        public void Tabulate(HomeViewModel viewModel, ColumnData columnData)
+        public void Tabulate(HomeViewModel viewModel, ColumnData columnData, IUserInputService userInputService)
         {
             for (int roundNumber = 1; roundNumber <= columnData.Candidates.Count; roundNumber++)
             {
@@ -27,21 +27,7 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
                 var candidatesToBeEliminated = orderedActiveCandidates.Where(x => x.Value == lowestVoteCount).Select(x => x.Key);
                 if (candidatesToBeEliminated.Count() > 1 && viewModel.ManualTieBreaking)
                 {
-                    var waitHandle = new AutoResetEvent(false);
-                    CandidateSelectedEventArgs eventData = null;
-                    EventHandler<CandidateSelectedEventArgs> handler = (sender, args) =>
-                    {
-                        eventData = args;
-                        waitHandle.Set();
-                    };
-
-                    viewModel.CandidateSelected += handler;
-
-                    viewModel.NavigateToTieBreakerCommand.Execute(candidatesToBeEliminated.ToList());
-
-                    waitHandle.WaitOne();
-                    var selectedCandidate = eventData?.SelectedCandidate;
-                    viewModel.CandidateSelected -= handler;
+                    Candidate? selectedCandidate = userInputService.DoManualTieBreaker(viewModel, candidatesToBeEliminated);
 
                     if (selectedCandidate != null)
                     {

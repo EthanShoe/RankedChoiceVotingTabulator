@@ -59,7 +59,7 @@ namespace RankedChoiceVotingTabulator.Wpf.Commands.Home
                     columnData.Candidates.ForEach(x => x.Reset());
                     columnData.Votes.ForEach(x => x.CalculateTopCandidate());
                 }
-                new TabulationService().Tabulate(_viewModel, columnData);
+                new TabulationService().Tabulate(_viewModel, columnData, new UserInputService());
                 TabulationService.WriteResults(columnData, new ExcelWorksheetWrapper(_viewModel.ExcelPackage.NewSheet(columnData.Title)));
             }
 
