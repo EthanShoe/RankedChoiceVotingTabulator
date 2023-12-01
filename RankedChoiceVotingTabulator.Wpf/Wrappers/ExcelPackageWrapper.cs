@@ -38,7 +38,7 @@ namespace RankedChoiceVotingTabulator.Wpf.Wrappers
             }
             catch (InvalidOperationException)
             {
-                var response = MessageBox.Show("Save failed: please close the Excel file that you submitted and press enter to try again", "Failed to Save Excel File", MessageBoxButton.OKCancel);
+                var response = MessageBox.Show("Save failed: please close the Excel file that you submitted and press OK to try again", "Failed to Save Excel File", MessageBoxButton.OKCancel);
                 switch (response)
                 {
                     case MessageBoxResult.OK:

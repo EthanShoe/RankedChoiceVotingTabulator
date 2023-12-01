@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 
-namespace RankedChoiceVotingTabulator.Wpf.Commands
+namespace RankedChoiceVotingTabulator.Wpf.Commands.Home
 {
     public class InputProcessingCommand : CommandBase
     {
@@ -44,7 +44,7 @@ namespace RankedChoiceVotingTabulator.Wpf.Commands
 
                 _viewModel.ColumnData = new ObservableCollection<ColumnData>(results);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 ShowError(ex.Message);
             }

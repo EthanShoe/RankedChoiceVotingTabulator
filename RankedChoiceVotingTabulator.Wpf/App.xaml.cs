@@ -19,7 +19,7 @@ namespace RankedChoiceVotingTabulator.Wpf
             };
             MainWindow.Show();
 
-            navigationStore.CurrentViewModel = new HomeViewModel(navigationStore);
+            navigationStore.CurrentViewModel = new HomeViewModel(navigationStore, new ViewModelStore());
 
             base.OnStartup(e);
         }

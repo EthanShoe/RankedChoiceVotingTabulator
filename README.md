@@ -1,5 +1,6 @@
 # RankedChoiceVotingTabulator
-A C# .NET Core WPF application to take ranking question results from Microsoft Forms and tabulate them into ranked choice voting.
+
+A C# .NET Desktop application to take ranking question results from Microsoft Forms and tabulate them into ranked choice voting.
 
 ## Description
 
@@ -30,13 +31,15 @@ The RankedChoiceVotingTabulator will parse through said data calculate the winne
 
 ## How the Winner Is Determined
 
-In order for a candidate to win, they need to have more than 50% of the preferred votes (popularity). If nobody has more than 50% of the vote, then the candidate(s) with the least amount of votes is removed from the running and anyone who voted for that candidate has their vote go towards their next preferred candidate.
+In order for a candidate to win, they need to have more than 50% of the preferred votes. If nobody has more than 50% of the vote, then the candidate with the least amount of votes is removed from the running and anyone who voted for that candidate has their vote go towards their next preferred candidate.
 
 This process is broken down into rounds. Each round, each candidate's preferred votes are tallied up (ex: If they were ranked first on any votes, those are counted. If they were ranked any place other than first, but they are the highest ranked candidate that has not been eliminated, those are also counted). If no candidate has more than 50% of the votes, the candidate with the lowest preferred votes is eliminated and a new round starts.
 
-### Tiebreaking
+### Tie Breaking
 
 In the event of a tie on any round, any candidates that are tied are eliminated together and the next round starts. This means that if there is a tie for the final winner, nobody wins.
+
+Optionally, the user can choose to manually break ties. When this option is selected, the user will be prompted to eliminate a candidate any time two or more candidates have the lowest preferred vote count.
 
 ## Credit
 

@@ -54,6 +54,10 @@
                 <RowDefinition Height="6*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
+            <TextBlock Text="Ranked Choice Voting Tabulator" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" />
+            <StackPanel Grid.Row="1">
+                <CheckBox Content="Manual Tie Breaking" IsChecked="{Binding ManualTieBreaking}" />
+            </StackPanel>
             <Button Grid.Row="2" Content="Tabulate" Margin="10" Background="{StaticResource PrimaryHueDarkBrush}" Command="{Binding TabulateCommand}" IsEnabled="{Binding ControlsEnabled}" />
         </Grid>
     </Grid>

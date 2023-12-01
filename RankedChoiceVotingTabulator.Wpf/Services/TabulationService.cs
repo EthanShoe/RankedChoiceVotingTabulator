@@ -4,7 +4,7 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
 {
     public class TabulationService
     {
-        public static void Tabulate(ColumnData columnData)
+        public void Tabulate(HomeViewModel viewModel, ColumnData columnData, IUserInputService userInputService)
         {
             for (int roundNumber = 1; roundNumber <= columnData.Candidates.Count; roundNumber++)
             {
@@ -19,15 +19,25 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
                 if (orderedActiveCandidates.FirstOrDefault().Value >= Math.Floor((decimal)columnData.Votes.Where(x => x.TopCandidate != null).Count() / 2) + 1)
                 {
                     orderedActiveCandidates.FirstOrDefault().Key.Status = Candidate.CandidateStatus.Winner;
-                    orderedActiveCandidates.Skip(1).ToList().ForEach(x => EliminateCandidate(roundNumber, x.Key));
+                    EliminateCandidates(columnData, roundNumber, orderedActiveCandidates.Skip(1).Select(x => x.Key), false);
                     break;
                 }
 
                 var lowestVoteCount = orderedActiveCandidates.LastOrDefault().Value;
-                foreach (var candidate in orderedActiveCandidates.Where(x => x.Value == lowestVoteCount).Select(x => x.Key))
+                var candidatesToBeEliminated = orderedActiveCandidates.Where(x => x.Value == lowestVoteCount).Select(x => x.Key);
+                if (candidatesToBeEliminated.Count() > 1 && viewModel.ManualTieBreaking)
                 {
-                    EliminateCandidate(roundNumber, candidate);
-                    columnData.Votes.Where(x => x.TopCandidate == candidate).ToList().ForEach(x => x.CalculateTopCandidate());
+                    Candidate? selectedCandidate = userInputService.DoManualTieBreaker(viewModel, candidatesToBeEliminated);
+
+                    if (selectedCandidate != null)
+                    {
+                        candidatesToBeEliminated = candidatesToBeEliminated.Where(x => x == selectedCandidate);
+                    }
+                    EliminateCandidates(columnData, roundNumber, candidatesToBeEliminated, true);
+                }
+                else
+                {
+                    EliminateCandidates(columnData, roundNumber, candidatesToBeEliminated, true);
                 }
 
                 if (!columnData.Candidates.Where(x => x.Status != Candidate.CandidateStatus.Eliminated).Any())
@@ -37,10 +47,16 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
             }
         }
 
-        private static void EliminateCandidate(int roundNumber, Candidate candidate)
+        private static void EliminateCandidates(ColumnData columnData, int roundNumber, IEnumerable<Candidate> candidatesToBeEliminated, bool calculateTopCandidate)
         {
-            candidate.Status = Candidate.CandidateStatus.Eliminated;
-            candidate.RoundEliminated = roundNumber;
+            foreach (var candidate in candidatesToBeEliminated)
+            {
+                candidate.Status = Candidate.CandidateStatus.Eliminated;
+                candidate.RoundEliminated = roundNumber;
+
+                if (calculateTopCandidate)
+                    columnData.Votes.Where(x => x.TopCandidate == candidate).ToList().ForEach(x => x.CalculateTopCandidate());
+            }
         }
 
         public static void WriteResults(ColumnData columnData, ExcelWorksheetWrapper worksheet)

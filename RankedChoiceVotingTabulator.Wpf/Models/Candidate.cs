@@ -12,6 +12,12 @@
         public CandidateStatus Status { get; set; }
         public int? RoundEliminated { get; set; }
 
+        public void Reset()
+        {
+            Status = CandidateStatus.Active;
+            RoundEliminated = null;
+        }
+
         public enum CandidateStatus
         {
             Active,
