@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RankedChoiceVotingTabulator.Wpf\RankedChoiceVotingTabulator.Wpf.csproj" />
-    <ProjectReference Include="..\RankedChoiceVotingTabulator\RankedChoiceVotingTabulator.Wpf.csproj" />
   </ItemGroup>
 
   <ItemGroup>
