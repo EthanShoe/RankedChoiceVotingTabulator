@@ -59,6 +59,24 @@ namespace RankedChoiceVotingTabulator.Tests
         }
 
         [Fact]
+        public void GetColumnData_TwoColumnsOneEmpty_ReturnsOneColumn()
+        {
+            // Arrange
+            var service = new InputProcessingService();
+            var excelWorksheetMock = new Mock<IExcelWorksheetWrapper>();
+            excelWorksheetMock.Setup(x => x.GetRowCount()).Returns(2);
+            excelWorksheetMock.Setup(x => x.GetColumnCount()).Returns(7);
+            excelWorksheetMock.Setup(x => x.GetColumnCellsByColumnNumber(6)).Returns(new List<string> { "Title", "Test1;Test2;" });
+            excelWorksheetMock.Setup(x => x.GetColumnCellsByColumnNumber(7)).Returns(new List<string> { "Title", null });
+
+            // Act
+            var returnData = service.GetColumnData(excelWorksheetMock.Object);
+
+            // Assert
+            Assert.Single(returnData);
+        }
+
+        [Fact]
         public void GetColumnData_ColumnWithDifferentCandidatesInEntries_ReturnsAllCandidates()
         {
             // Arrange
