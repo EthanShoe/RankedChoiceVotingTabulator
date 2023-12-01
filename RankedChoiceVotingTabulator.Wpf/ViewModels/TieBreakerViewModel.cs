@@ -13,7 +13,7 @@ namespace RankedChoiceVotingTabulator.Wpf.ViewModels
             ViewModelStore = viewModelStore;
 
             SelectCandidateCommand = new SelectCandidateCommand(this);
-            NavigateToHomeCommand = new NavigateToHomeCommand(new NavigationService<HomeViewModel>(navigationStore, () => new HomeViewModel(navigationStore, viewModelStore)));
+            NavigateToHomeCommand = new NavigateToHomeCommand(new NavigationService<HomeViewModel>(navigationStore, () => viewModelStore.HomeViewModel));
         }
 
         public ObservableCollection<Candidate> Candidates { get; set; }

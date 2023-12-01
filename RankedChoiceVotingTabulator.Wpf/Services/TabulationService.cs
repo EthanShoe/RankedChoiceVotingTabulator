@@ -2,8 +2,15 @@
 
 namespace RankedChoiceVotingTabulator.Wpf.Services
 {
-    public class TabulationService
+    public class TabulationService : ITabulationService
     {
+        private readonly ITabulationService _tabulationService;
+
+        public TabulationService(ITabulationService tabulationService)
+        {
+            _tabulationService = tabulationService;
+        }
+
         public void Tabulate(HomeViewModel viewModel, ColumnData columnData)
         {
             for (int roundNumber = 1; roundNumber <= columnData.Candidates.Count; roundNumber++)
@@ -27,21 +34,7 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
                 var candidatesToBeEliminated = orderedActiveCandidates.Where(x => x.Value == lowestVoteCount).Select(x => x.Key);
                 if (candidatesToBeEliminated.Count() > 1 && viewModel.ManualTieBreaking)
                 {
-                    var waitHandle = new AutoResetEvent(false);
-                    CandidateSelectedEventArgs eventData = null;
-                    EventHandler<CandidateSelectedEventArgs> handler = (sender, args) =>
-                    {
-                        eventData = args;
-                        waitHandle.Set();
-                    };
-
-                    viewModel.CandidateSelected += handler;
-
-                    viewModel.NavigateToTieBreakerCommand.Execute(candidatesToBeEliminated.ToList());
-
-                    waitHandle.WaitOne();
-                    var selectedCandidate = eventData?.SelectedCandidate;
-                    viewModel.CandidateSelected -= handler;
+                    Candidate? selectedCandidate = DoManualTieBreaker(viewModel, candidatesToBeEliminated.ToList());
 
                     if (selectedCandidate != null)
                     {
@@ -61,7 +54,27 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
             }
         }
 
-        private static void EliminateCandidates(ColumnData columnData, int roundNumber, IEnumerable<Candidate> candidatesToBeEliminated, bool calculateTopCandidate)
+        public Candidate? DoManualTieBreaker(HomeViewModel viewModel, List<Candidate> candidatesToBeEliminated)
+        {
+            var waitHandle = new AutoResetEvent(false);
+            CandidateSelectedEventArgs eventData = null;
+            EventHandler<CandidateSelectedEventArgs> handler = (sender, args) =>
+            {
+                eventData = args;
+                waitHandle.Set();
+            };
+
+            viewModel.CandidateSelected += handler;
+
+            viewModel.NavigateToTieBreakerCommand?.Execute(candidatesToBeEliminated.ToList());
+
+            waitHandle.WaitOne();
+            var selectedCandidate = eventData?.SelectedCandidate;
+            viewModel.CandidateSelected -= handler;
+            return selectedCandidate;
+        }
+
+        private void EliminateCandidates(ColumnData columnData, int roundNumber, IEnumerable<Candidate> candidatesToBeEliminated, bool calculateTopCandidate)
         {
             foreach (var candidate in candidatesToBeEliminated)
             {
@@ -73,7 +86,7 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
             }
         }
 
-        public static void WriteResults(ColumnData columnData, ExcelWorksheetWrapper worksheet)
+        public void WriteResults(ColumnData columnData, ExcelWorksheetWrapper worksheet)
         {
             worksheet.SetCellsRow(1, 2, columnData.Rounds.Select(x => $"Round {x.Number}").ToList());
 
@@ -90,5 +103,11 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
             }
             worksheet.SetAllColumnsAutoWidth();
         }
+    }
+
+    public interface ITabulationService
+    {
+        void Tabulate(HomeViewModel viewModel, ColumnData columnData);
+        Candidate? DoManualTieBreaker(HomeViewModel viewModel, List<Candidate> candidatesToBeEliminated);
     }
 }

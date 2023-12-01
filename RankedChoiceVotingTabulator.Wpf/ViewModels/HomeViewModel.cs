@@ -6,8 +6,11 @@ namespace RankedChoiceVotingTabulator.Wpf.ViewModels
 {
     public class HomeViewModel : ViewModelBase
     {
-        public HomeViewModel(NavigationStore navigationStore, ViewModelStore viewModelStore)
+        public HomeViewModel() { }
+
+        public HomeViewModel(NavigationStore navigationStore, ViewModelStore viewModelStore, ITabulationService tabulationService)
         {
+            _tabulationService = tabulationService;
             ControlsEnabled = true;
             ColumnData = new();
             ManualTieBreaking = false;
@@ -17,9 +20,10 @@ namespace RankedChoiceVotingTabulator.Wpf.ViewModels
             var newTieBreakStore = new TieBreakStore();
             NavigateToTieBreakerCommand = new NavigateToTieBreakerCommand(new NavigationService<TieBreakerViewModel>(navigationStore, () => new TieBreakerViewModel(navigationStore, viewModelStore, newTieBreakStore)), newTieBreakStore);
             InputProcessingCommand = new InputProcessingCommand(this);
-            TabulateCommand = new TabulateCommand(this);
+            TabulateCommand = new TabulateCommand(this, _tabulationService);
         }
 
+        private ITabulationService _tabulationService;
         private string? _excelFilePath;
         private ObservableCollection<ColumnData> _columnData;
         private ExcelPackageWrapper _excelPackage;

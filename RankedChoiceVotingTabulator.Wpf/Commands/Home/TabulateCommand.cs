@@ -1,16 +1,14 @@
-﻿using OfficeOpenXml;
-using System.Diagnostics;
-using System.IO;
-
-namespace RankedChoiceVotingTabulator.Wpf.Commands.Home
+﻿namespace RankedChoiceVotingTabulator.Wpf.Commands.Home
 {
     public class TabulateCommand : CommandBase
     {
         private HomeViewModel _viewModel;
+        private ITabulationService _tabulationService;
 
-        public TabulateCommand(HomeViewModel viewModel)
+        public TabulateCommand(HomeViewModel viewModel, ITabulationService tabulationService)
         {
             _viewModel = viewModel;
+            _tabulationService = tabulationService;
         }
 
         public override void Execute(object parameter)
@@ -50,7 +48,7 @@ namespace RankedChoiceVotingTabulator.Wpf.Commands.Home
 
         private void LongRunningTask()
         {
-            var tabulationService = new TabulationService();
+            var tabulationService = new TabulationService(_tabulationService);
             foreach (var columnData in _viewModel.ColumnData.Where(x => x.IsActive))
             {
                 if (columnData.Rounds.Count != 0)
@@ -59,8 +57,8 @@ namespace RankedChoiceVotingTabulator.Wpf.Commands.Home
                     columnData.Candidates.ForEach(x => x.Reset());
                     columnData.Votes.ForEach(x => x.CalculateTopCandidate());
                 }
-                new TabulationService().Tabulate(_viewModel, columnData);
-                TabulationService.WriteResults(columnData, new ExcelWorksheetWrapper(_viewModel.ExcelPackage.NewSheet(columnData.Title)));
+                tabulationService.Tabulate(_viewModel, columnData);
+                tabulationService.WriteResults(columnData, new ExcelWorksheetWrapper(_viewModel.ExcelPackage.NewSheet(columnData.Title)));
             }
 
             var response = _viewModel.ExcelPackage.Save();
