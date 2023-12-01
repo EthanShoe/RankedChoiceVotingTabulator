@@ -18,7 +18,7 @@
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Style="{StaticResource border}">
                 <Grid>
-                    <TextBlock Style="{StaticResource displayTextBlock}" Text="Click or Drag Here"/>
+                    <TextBlock Style="{StaticResource displayTextBlock}" Text="Click or Drag File Here"/>
                     <TextBlock Style="{StaticResource dragDropTextBlock}" Drop="InputFiles_Drop" PreviewMouseLeftButtonUp="InputFiles_Click" IsEnabled="{Binding ControlsEnabled}" />
                 </Grid>
             </Border>
@@ -56,7 +56,7 @@
             </Grid.RowDefinitions>
             <TextBlock Text="Ranked Choice Voting Tabulator" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" />
             <StackPanel Grid.Row="1">
-                <CheckBox Content="Manual Tie Breaking" IsChecked="{Binding ManualTieBreaking}" />
+                <CheckBox Content="Manual Tie Breaking" IsChecked="{Binding ManualTieBreaking}" Margin="10" FontSize="15" />
             </StackPanel>
             <Button Grid.Row="2" Content="Tabulate" Margin="10" Background="{StaticResource PrimaryHueDarkBrush}" Command="{Binding TabulateCommand}" IsEnabled="{Binding ControlsEnabled}" />
         </Grid>

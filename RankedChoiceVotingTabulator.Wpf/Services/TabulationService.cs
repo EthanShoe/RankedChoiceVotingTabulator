@@ -33,12 +33,8 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
                     {
                         candidatesToBeEliminated = candidatesToBeEliminated.Where(x => x == selectedCandidate);
                     }
-                    EliminateCandidates(columnData, roundNumber, candidatesToBeEliminated, true);
                 }
-                else
-                {
-                    EliminateCandidates(columnData, roundNumber, candidatesToBeEliminated, true);
-                }
+                EliminateCandidates(columnData, roundNumber, candidatesToBeEliminated, true);
 
                 if (!columnData.Candidates.Where(x => x.Status != Candidate.CandidateStatus.Eliminated).Any())
                 {
