@@ -15,7 +15,7 @@ namespace RankedChoiceVotingTabulator.Wpf.Services
             {
                 var columnCells = excelWorksheet.GetColumnCellsByColumnNumber(columnNumber);
                 var columnCellsWithoutTitle = columnCells.Skip(1).Where(x => !string.IsNullOrEmpty(x));
-                if (!columnCellsWithoutTitle.All(x => x.EndsWith(';')))
+                if (!columnCellsWithoutTitle.Any() || !columnCellsWithoutTitle.All(x => x.EndsWith(';')))
                     continue;
 
                 result.Add(new ColumnData(
