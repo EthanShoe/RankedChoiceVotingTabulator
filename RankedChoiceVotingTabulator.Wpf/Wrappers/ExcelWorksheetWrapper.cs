@@ -44,7 +44,7 @@ namespace RankedChoiceVotingTabulator.Wpf.Wrappers
         public List<string> GetColumnCellsByColumnNumber(int columnNumber)
         {
             var columnCells = _worksheet.Cells[1, columnNumber, GetRowCount(), columnNumber];
-            return columnCells.Select(cell => cell.Value.ToString()).ToList();
+            return columnCells.Select(cell => cell.Value?.ToString()).ToList();
         }
 
         public void SetAllColumnsAutoWidth()
