@@ -8,7 +8,7 @@ namespace RankedChoiceVotingTabulator.Wpf.ViewModels
         public TieBreakerViewModel(NavigationStore navigationStore, ViewModelStore viewModelStore, TieBreakStore tieBreakStore)
         {
             Candidates = new ObservableCollection<Candidate>(tieBreakStore.Candidates);
-            TopText = $"There was a tie between the below candidates in round {viewModelStore.HomeViewModel?.ColumnData.Last().Rounds.Last().Number} for {viewModelStore.HomeViewModel?.ColumnData.Last().Title}. Please choose a candidate to eliminate. Exiting will eliminate all of them at once.";
+            TopText = $"There was a tie for {viewModelStore.HomeViewModel?.ColumnData.Last().Title} between the below candidates in round {viewModelStore.HomeViewModel?.ColumnData.Last().Rounds.Last().Number}. Pressing return will eliminate all of them at once.";
 
             ViewModelStore = viewModelStore;
 

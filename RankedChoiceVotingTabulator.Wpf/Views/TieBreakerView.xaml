@@ -8,16 +8,19 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button Content="Exit" Command="{Binding SelectCandidateCommand}" Margin="10" />
-            <TextBlock Grid.Column="1" Text="{Binding TopText}" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" />
+            <Button Content="Return" Command="{Binding SelectCandidateCommand}" Margin="10" Background="{StaticResource ColorExit}" />
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="Please select a candidate to eliminate" HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="20" />
+                <TextBlock Text="{Binding TopText}" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" />
+            </StackPanel>
         </Grid>
         <ListBox Grid.Row="1" Width="auto" Margin="10" ItemsSource="{Binding Candidates}" HorizontalContentAlignment="Center" >
             <ListBox.ItemContainerStyle>
